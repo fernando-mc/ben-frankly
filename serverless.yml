@@ -21,13 +21,9 @@ functions:
           method: get
           cors: true
 
-package:
-  exclude:
-    - raw_materials/**
-
 resources:
   Resources:
-    PetsTable:
+    PennyForYourThoughtsTable:
       Type: AWS::DynamoDB::Table
       DeletionPolicy: Retain # Keeps around the DynamoDB resource when we redeploy/destroy
       Properties:
@@ -43,3 +39,8 @@ resources:
           ReadCapacityUnits: 10
           WriteCapacityUnits: 10
         TableName: ${self:provider.environment.DYNAMODB_TABLE}
+
+package:
+  exclude:
+    - raw_materials/**
+    - data_population/**

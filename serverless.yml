@@ -4,6 +4,7 @@ provider:
   name: aws
   runtime: nodejs6.10
   environment:
+    GOOGLE_RECAPTCHA_TOKEN: TOKEN-HERE
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
   iamRoleStatements:
     - Effect: Allow
@@ -13,12 +14,13 @@ provider:
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 functions:
-  get:
-    handler: get.get
+  getThoughts:
+    handler: get.thoughts
     events:
       - http:
-          path: ben/{id}
-          method: get
+          path: ben
+          integration: lambda
+          method: post
           cors: true
 
 resources:
@@ -44,3 +46,10 @@ package:
   exclude:
     - raw_materials/**
     - data_population/**
+
+plugins:
+  - serverless-finch
+
+custom:
+  client:
+    bucketName: ben-frankly

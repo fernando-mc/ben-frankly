@@ -1,3 +1,14 @@
+#!/usr/bin/python3
+
+# Loads data into DynamoDB
+import boto3
+import time
+
+dynamodb_client = boto3.client('dynamodb')
+dynamodb_resource = boto3.resource('dynamodb')
+
+table = dynamodb_resource.Table('ben-frankly-dev')
+
 QUOTES = [
     ["He had an excellent constitution of body, was of middle stature, but well set, and very strong; he was ingenious, could draw prettily, was skilled a little in music, and had a clear, pleasing voice"],
     ["he was never employed, the numerous family he had to educate and the straitness of his circumstances keeping him close to his trade; but I remember well his being frequently visited by leading people"],
@@ -64,13 +75,14 @@ QUOTES = [
     ["which prov'd clearly what our captain suspected, that she was loaded too much by the head."]
 ]
 
-data_model = {}
 count = 1
 for i in QUOTES:
     print i[0]
-    data_model[str(count)] = i[0]
-    print data_model
+    response = table.put_item(
+        Item={
+                'id': str(count),
+                'quote': i[0]
+            }
+        )
+    time.sleep(3)
     count += 1
-
-
-print data_model
